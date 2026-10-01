@@ -1,0 +1,10 @@
+Filetype: Flipper NFC device
+Version: 4
+Device type: NTAG215
+# UID is placeholder - replace with real dump
+UID: 04 00 00 00 00 00 00
+ATQA: 00 44
+SAK: 00
+Data format version: 2
+NTAG215 pages total: 135
+NTAG215 pages read: 0

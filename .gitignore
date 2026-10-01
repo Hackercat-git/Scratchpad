@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# Real capture files (don't commit actual card dumps or captured signals)
+# Remove these lines if you want to track your own captures
+*.nfc
+*.sub
+!NFC/blank_ntag215.nfc
+!SubGHz/test_pattern_433.sub
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.idea/
+.vscode/
+*.swp

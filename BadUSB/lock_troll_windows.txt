@@ -1,0 +1,15 @@
+REM Title: Lock + Troll (Windows)
+REM Description: Opens Notepad with a message, then locks the screen.
+REM               Purely harmless — great for pranking friends.
+REM Target: Windows 10/11
+REM Author: Hackercat-git
+
+DELAY 1000
+GUI r
+DELAY 400
+STRING notepad
+ENTER
+DELAY 600
+STRING 🐾 You just got Hackercatted. Nothing bad happened — but next time, lock your screen. 🐾
+DELAY 200
+GUI l

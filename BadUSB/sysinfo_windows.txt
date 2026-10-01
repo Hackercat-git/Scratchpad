@@ -1,0 +1,11 @@
+REM Title: Windows Sysinfo Dump
+REM Description: Opens PowerShell hidden, dumps system info + network config
+REM               to a .txt file on the Desktop, then opens it.
+REM Target: Windows 10/11
+REM Author: Hackercat-git
+
+DELAY 1000
+GUI r
+DELAY 400
+STRING powershell -WindowStyle Hidden -Command "& { $out = \"$env:USERPROFILE\Desktop\sysinfo.txt\"; $lines = @(); $lines += '=== System Info ==='; $lines += (Get-ComputerInfo | Select-Object CsName,OsName,OsVersion,CsProcessors,CsTotalPhysicalMemory | Format-List | Out-String); $lines += '=== Network ==='; $lines += (Get-NetIPAddress | Format-Table | Out-String); $lines += '=== Users ==='; $lines += (Get-LocalUser | Format-Table | Out-String); $lines | Set-Content $out; Start-Process notepad $out }"
+ENTER
