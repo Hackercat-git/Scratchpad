@@ -1,47 +1,109 @@
 # Tools
 
-Python utilities for generating and parsing Flipper Zero files. No dependencies beyond the standard library.
+Standalone Python CLI tools for generating and analyzing Flipper Zero files.  
+No external dependencies — Python 3.8+ only.
 
-## Scripts
+---
 
-### `sub_gen.py` — SubGHz file generator
+## sub_gen.py — SubGHz file generator
 
-Converts a binary bit pattern into a Flipper `.sub` file.
-
-```bash
-# Generate a signal at 433.92 MHz, repeated 3 times
-python sub_gen.py --bits 10110100 --freq 433920000 --repeat 3 -o my_signal.sub
-
-# Custom timings
-python sub_gen.py --bits 10110100 --short 400 --long 900 --gap 12000 -o custom.sub
-```
-
-### `ir_parser.py` — IR file inspector
-
-Lists and inspects signals in a Flipper `.ir` file. Can convert parsed NEC signals back to raw timings.
+Converts a binary bit string into a Flipper `.sub` RAW file.
 
 ```bash
-# List all signals
-python ir_parser.py ../Infrared/samsung_tv.ir
+# Basic usage
+python tools/sub_gen.py --bits 10110100 -o out.sub
 
-# Inspect one signal
-python ir_parser.py ../Infrared/samsung_tv.ir --name Power
+# Custom frequency and timing
+python tools/sub_gen.py --bits 1010101010110011 --freq 315000000 --short 300 --long 900 -o out.sub
 
-# Convert NEC to raw
-python ir_parser.py ../Infrared/samsung_tv.ir --name Power --to-raw
+# Repeat signal 5 times
+python tools/sub_gen.py --bits 10110100 --repeat 5 -o out.sub
 ```
 
-### `badusb_gen.py` — BadUSB payload generator
+| Argument | Default | Description |
+|----------|---------|-------------|
+| `--bits` | required | Binary string (e.g. `10110100`) |
+| `--freq` | 433920000 | Frequency in Hz |
+| `--short` | 500 | Short pulse duration (µs) |
+| `--long` | 1000 | Long pulse duration (µs) |
+| `--gap` | 10000 | Gap between repeats (µs) |
+| `--repeat` | 3 | Number of RAW_Data repetitions |
+| `-o` | stdout | Output file path |
 
-Generates Ducky Script payloads from named templates.
+---
+
+## sub_analyze.py — SubGHz file analyzer
+
+Reads a `.sub` file and shows signal statistics and encoding hints.
 
 ```bash
-# List templates
-python badusb_gen.py --list
+# Basic stats
+python tools/sub_analyze.py SubGHz/test_pattern_433.sub
 
-# Generate a troll payload
-python badusb_gen.py troll --message "You got hackercatted 🐾" -o troll.txt
+# Show raw values
+python tools/sub_analyze.py signal.sub --raw
 
-# Generate a sysinfo payload
-python badusb_gen.py sysinfo --outpath "C:\\Users\\Public\\info.txt" -o sysinfo.txt
+# Heuristic encoding detection
+python tools/sub_analyze.py signal.sub --detect
 ```
+
+| Argument | Description |
+|----------|-------------|
+| `file` | Path to `.sub` file |
+| `--raw` | Print first 20 raw values per row |
+| `--detect` | Try to guess encoding from pulse widths |
+
+---
+
+## nfc_gen.py — NFC card file generator
+
+Generates blank Flipper `.nfc` files for various card types.
+
+```bash
+# List supported card types
+python tools/nfc_gen.py --list
+
+# Generate blank NTAG215
+python tools/nfc_gen.py --type ntag215 -o blank.nfc
+
+# Generate MIFARE Classic 1K with custom UID
+python tools/nfc_gen.py --type mifare1k --uid AA BB CC DD -o card.nfc
+
+# NTAG213 with custom 7-byte UID
+python tools/nfc_gen.py --type ntag213 --uid 04 AB CD EF 01 02 03 -o tag.nfc
+```
+
+Supported types: `ntag213`, `ntag215`, `ntag216`, `mifare1k`, `mifare4k`
+
+---
+
+## ir_parser.py — IR signal file parser
+
+Reads `.ir` files, lists signals, and can convert parsed NEC signals to raw timing.
+
+```bash
+# List all signals in a file
+python tools/ir_parser.py Infrared/samsung_tv.ir --list
+
+# Convert parsed signal to raw timing data
+python tools/ir_parser.py Infrared/samsung_tv.ir --to-raw Power
+```
+
+---
+
+## badusb_gen.py — BadUSB script generator
+
+Generates Ducky Script from built-in templates.
+
+```bash
+# Generate sysinfo payload
+python tools/badusb_gen.py --template sysinfo -o payload.txt
+
+# Generate troll payload
+python tools/badusb_gen.py --template troll -o troll.txt
+
+# Open a URL
+python tools/badusb_gen.py --template open_url --url https://example.com -o open.txt
+```
+
+Templates: `troll`, `sysinfo`, `open_url`

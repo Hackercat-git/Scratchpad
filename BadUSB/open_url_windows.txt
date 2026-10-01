@@ -1,0 +1,8 @@
+REM Title: Open URL in browser (Windows)
+REM Opens a URL silently via Run dialog.
+
+DELAY 500
+GUI r
+DELAY 400
+STRING https://github.com/Hackercat-git
+ENTER
